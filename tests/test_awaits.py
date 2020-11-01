@@ -15,6 +15,8 @@ async def test_individual_task(mocker):
 
 @pytest.mark.asyncio
 async def test_main(mocker):
-    task = mocker.patch("awaits.individual_task")
+    sleep = mocker.patch("awaits.asyncio.sleep")
     await main(10)
-    assert task.await_count == 10
+    assert sleep.await_count == 10
+    times = [call.args[0] for call in sleep.await_args_list]
+    assert all(time in range(10, 60) for time in times)
