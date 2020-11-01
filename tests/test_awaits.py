@@ -4,18 +4,17 @@ from awaits import individual_task, main
 
 
 @pytest.mark.asyncio
-async def test_individual_task():
-    tic = time.time()
+async def test_individual_task(mocker):
+    sleep = mocker.patch("awaits.asyncio.sleep")
     await individual_task(2)
-    tac = time.time()
+    sleep.assert_awaited_once()
 
-    assert tac - tic >= 10
+    seconds = sleep.await_args.args[0]
+    assert seconds in range(10, 60)
 
 
 @pytest.mark.asyncio
-async def test_main():
-    tic = time.time()
-    await main(2)
-    tac = time.time()
-
-    assert tac - tic >= 10
+async def test_main(mocker):
+    task = mocker.patch("awaits.individual_task")
+    await main(10)
+    assert task.await_count == 10
