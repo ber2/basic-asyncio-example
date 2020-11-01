@@ -1,2 +1,3 @@
-# python-template
-Template for python code projects
+# A basic asyncio example
+
+...and how to test it.
