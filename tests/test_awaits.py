@@ -1,11 +1,12 @@
 import time
 import pytest
+from unittest import mock
 from awaits import individual_task, main
 
 
 @pytest.mark.asyncio
-async def test_individual_task(mocker):
-    sleep = mocker.patch("awaits.asyncio.sleep")
+@mock.patch("awaits.asyncio.sleep")
+async def test_individual_task(sleep):
     await individual_task(2)
     sleep.assert_awaited_once()
 
@@ -14,8 +15,8 @@ async def test_individual_task(mocker):
 
 
 @pytest.mark.asyncio
-async def test_main(mocker):
-    sleep = mocker.patch("awaits.asyncio.sleep")
+@mock.patch("awaits.asyncio.sleep")
+async def test_main(sleep):
     await main(10)
     assert sleep.await_count == 10
     times = [call.args[0] for call in sleep.await_args_list]
